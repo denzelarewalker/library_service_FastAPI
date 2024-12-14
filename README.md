@@ -4,7 +4,7 @@
 
 Запустите контейнеры с помощью: `docker-compose up -d` или `docker compose up -d --build`
 
-
+||
 | POST запрос для авторов |
 | `curl -X POST -H "Content-Type: application/json" -d "{\"first_name\": \"Лев\", \"last_name\": \"Толстой\", \"birth_date\": \"1828-09-09\"}" http://127.0.0.1/authors/` |
 
