@@ -12,11 +12,12 @@
 
 
 | GET запросы для авторов |
-|-|-|
+|-|
 | все авторы | один автор по id |
 | `curl http://127.0.0.1/authors/` | `http://127.0.0.1/authors/1` |
 
 | PUT запросы для авторов |
+|-|
 | изменение всех характеритик | изменение одной характеритики |
 |-|-|
 | `curl -X PUT -H "Content-Type: application/json" -d "{\"first_name\": \"Кристина\", \"last_name\": \"Агата\", \"birth_date\": \"1890-01-15\"}" http://127.0.0.1/authors/1` | `curl -X PUT -H "Content-Type: application/json" -d "{\"first_name\": \"Кристи\"}" http://127.0.0.1/authors/1` |
