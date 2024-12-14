@@ -42,9 +42,9 @@ class BookUpdate(BookBase):
     title: Optional[str] = None
     description: Optional[str] = None
     author_id: Optional[int] = None
-# # ... аналогичные схемы для Book и Borrow ...
 
 
+#---------------------------------
 
 
 class BorrowBase(BaseModel):
