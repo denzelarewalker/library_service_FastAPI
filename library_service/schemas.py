@@ -1,62 +1,19 @@
 from typing import Optional
 from pydantic import BaseModel
-import datetime
-
-class AuthorCreate(BaseModel):
-    #pass
-    name: str
-    surname: str
-    birthdate: Optional[datetime.date]
-
-
-class AuthorUpdate(BaseModel):
-    name: Optional[str]
-    surname: Optional[str]
-    birthdate: Optional[datetime.date]
-
-
-# class Author(BaseModel):
-#     id: int
-#     name: str
-#     surname: str
-#     birthdate: Optional[datetime.date]
-
-#     class Config:
-#         orm_mode = True
-
-
-# # ... аналогичные схемы для Book и Borrow ...
-
-# class BorrowCreate(BaseModel):
-#     #pass
-#     book_id: int
-#     reader_name: str
-
-
-# class BorrowUpdate(BaseModel):
-#     return_date: Optional[datetime.date]
-
-
-# class Borrow(BaseModel):
-#     id: int
-#     book_id: int
-#     reader_name: str
-#     borrow_date: datetime.date
-#     return_date: Optional[datetime.date]
-
-#     class Config:
-#         orm_mode = True
-
-
 from datetime import date
-
 
 class AuthorBase(BaseModel):
     first_name: str
     last_name: str
     birth_date: date
 
+class AuthorCreate(AuthorBase):
+    pass
 
+class AuthorUpdate(AuthorBase):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    birth_date: Optional[date] = None
 
 class Author(AuthorBase):
     id: int
@@ -64,32 +21,46 @@ class Author(AuthorBase):
     class Config:
         orm_mode = True
 
-# class BookBase(BaseModel):
-#     title: str
-#     description: str
-#     author_id: int
-#     available_copies: int
+#---------------------------------
 
-# class BookCreate(BookBase):
-#     pass
+class BookBase(BaseModel):
+    title: str
+    description: str
+    author_id: int
+    available_copies: int = 0
 
-# class Book(BookBase):
-#     id: int
+class BookCreate(BookBase):
+    available_copies: int =+ 1
 
-#     class Config:
-#         orm_mode = True
+class Book(BookBase):
+    id: int
+    
+    class Config:
+        orm_mode = True
 
-# class BorrowBase(BaseModel):
-#     book_id: int
-#     reader_name: str
-#     borrow_date: date
+class BookUpdate(BookBase):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    author_id: Optional[int] = None
+# # ... аналогичные схемы для Book и Borrow ...
 
-# class BorrowCreate(BorrowBase):
-#     pass
+class BorrowBase(BaseModel):
+    book_id: int
+    reader_name: str
+    borrow_date: date = date.today()
+    return_date: Optional[date] = None
 
-# class Borrow(BorrowBase):
-#     id: int
-#     return_date: Optional[date]
+class BorrowCreate(BorrowBase):
+    pass
 
-#     class Config:
-#         orm_mode = True
+
+class BorrowReturn(BorrowBase):
+    return_date: date = date.today()
+
+
+class Borrow(BorrowBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
