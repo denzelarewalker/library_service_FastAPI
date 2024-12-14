@@ -39,7 +39,7 @@ def delete_author(db: Session, author_id: int):
     if db_author:
         db.delete(db_author)
         db.commit()
-        return f'Author with {db_author.id} was deleted'
+        return {'detail': f'Author with ID {db_author.id} was deleted'}
     else:
         return None
     
@@ -93,11 +93,11 @@ def delete_book(db: Session, book_id: int):
             db_book.available_copies -= 1
             db.commit()
             db.refresh(db_book)
-            return True
+            return db_book
         else:
-            return False
+            raise AttributeError(f"Books with ID {book_id} are out")
     else:
-        return False
+        raise KeyError(f"Books with ID {book_id} not found")
 
 
 def create_borrow(db: Session, borrow: schemas.BorrowCreate):
@@ -106,9 +106,9 @@ def create_borrow(db: Session, borrow: schemas.BorrowCreate):
         if db_book.available_copies:
             db_book.available_copies -= 1
         else:
-            return False
+            raise AttributeError(f"Books with ID {db_book.id} are out")
     else:
-        return False
+        raise KeyError(f"Books with ID {borrow.book_id} not found")
     db_borrow = Borrow(**borrow.dict())
     db.add(db_borrow)
     db.commit()

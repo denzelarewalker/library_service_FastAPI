@@ -26,9 +26,9 @@
 | POST   | Добавление новой книги                  | `curl -X POST -H "Content-Type: application/json" -d "{\"title\": \"Война и мир\", \"description\": \"Роман\", \"author_id\": 1}" http://127.0.0.1/books/` |
 | GET    | Получение списка всех книг              | `curl http://127.0.0.1/books/`                                                                                             |
 | GET    | Получение одной книги по ID             | `curl http://127.0.0.1/books/1`                                                                                             |
-| PUT    | Изменение всех характеристик автора     | `curl -X PUT -H "Content-Type: application/json" -d "{\"title\": \"Грешница\", \"description\": \"Поэма\"}" http://127.0.0.1/books/1` |
-| PUT    | Изменение одной характеристики автора   | `curl -X PUT -H "Content-Type: application/json" -d "{\"title\": \"Иоанн Дамаскин\"}" http://127.0.0.1/books/1`               |
-| DELETE | Удаление автора                         | `curl -X DELETE http://127.0.0.1/books/1`                                                                                    |
+| PUT    | Изменение всех характеристик книги      | `curl -X PUT -H "Content-Type: application/json" -d "{\"title\": \"Грешница\", \"description\": \"Поэма\"}" http://127.0.0.1/books/1` |
+| PUT    | Изменение одной характеристики книги    | `curl -X PUT -H "Content-Type: application/json" -d "{\"title\": \"Иоанн Дамаскин\"}" http://127.0.0.1/books/1`               |
+| DELETE | Удаление книги                          | `curl -X DELETE http://127.0.0.1/books/1`                                                                                    |
 
 
 ## Borrow Use Cases

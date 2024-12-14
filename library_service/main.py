@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Optional
 import uvicorn
-from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query
+from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from . import models, schemas, database, crud
 
@@ -97,15 +97,27 @@ def update_book(
 
 @app.delete("/books/{book_id}", response_model=schemas.Book)
 def delete_book(book_id: int, db: Session = Depends(get_db)):
-    db_book = crud.delete_book(db, book_id=book_id)
-    if db_book is None:
-        raise HTTPException(status_code=404, detail="Book not found")
-    return db_book
+    try:
+        db_book = crud.delete_book(db, book_id=book_id)
+        if db_book.available_copies:
+            message = f"Book with ID {db_book.id} was deleted. Available copies left: {db_book.available_copies}."
+            raise HTTPException(status_code=404, detail=str(message))
+        else:
+            message = f"Last book with ID {db_book.id} was deleted"
+            raise HTTPException(status_code=404, detail=str(message))
+    except Exception as err:
+        raise HTTPException(status_code=404, detail=str(err))
 
 
 @app.post("/borrows/", response_model=schemas.Borrow)
 def create_borrow(borrow: schemas.BorrowCreate, db: Session = Depends(get_db)):
-    return crud.create_borrow(db=db, borrow=borrow)
+    try:
+        db_borrow = crud.create_borrow(db=db, borrow=borrow)
+        return db_borrow
+    except Exception as err:
+        raise HTTPException(status_code=404, detail=str(err))
+
+
 
 
 @app.get("/borrows/", response_model=list[schemas.Borrow])
@@ -132,7 +144,7 @@ def return_borrow(borrow_id: int,
         return_date = return_date.return_date  # Берем дату из схемы
     try:
         crud.return_borrow(db, borrow_id=borrow_id, return_date = return_date)
-        return {"message": f"Borrow ID {borrow_id} returned"}
+        return {"detail": f"Borrow ID {borrow_id} returned"}
     except Exception as err:
         raise HTTPException(status_code=404, detail=str(err))
 
