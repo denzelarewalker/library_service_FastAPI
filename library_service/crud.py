@@ -121,15 +121,23 @@ def get_borrow(db: Session, borrow_id: int):
 def get_borrows(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Borrow).offset(skip).limit(limit).all()
 
-def return_borrow(db: Session, borrow_id: int):
+def return_borrow(db: Session, borrow_id: int, return_date: date|None):
     db_borrow = db.query(Borrow).filter(Borrow.id == borrow_id).first()
     if db_borrow:
-        db_borrow.return_date = date.today()
-        db_book = db.query(Book).filter(Book.id == db_borrow.book_id).first()
-        db_book.available_copies += 1
-        db.commit()
-        db.refresh(db_borrow)
-        db.refresh(db_book)
-        return db_borrow
+        if db_borrow.return_date == None:
+            
+            if return_date:
+                db_borrow.return_date = return_date
+            else:
+                db_borrow.return_date = date.today()
+            db_book = db.query(Book).filter(Book.id == db_borrow.book_id).first()
+            db_book.available_copies += 1
+            db.commit()
+            db.refresh(db_borrow)
+            db.refresh(db_book)
+            return db_borrow
+        else:
+            raise AttributeError("Book already returned")
     else:
-        return None
+        raise KeyError("Borrow not found")
+

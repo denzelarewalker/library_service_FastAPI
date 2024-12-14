@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import date
 
 class AuthorBase(BaseModel):
@@ -44,18 +44,21 @@ class BookUpdate(BookBase):
     author_id: Optional[int] = None
 # # ... аналогичные схемы для Book и Borrow ...
 
+
+
+
 class BorrowBase(BaseModel):
     book_id: int
     reader_name: str
     borrow_date: date = date.today()
-    return_date: Optional[date] = None
-
+    return_date: date|None = None
+ 
 class BorrowCreate(BorrowBase):
     pass
 
 
-class BorrowReturn(BorrowBase):
-    return_date: date = date.today()
+class BorrowReturn(BaseModel):
+    return_date: Optional[str] = None
 
 
 class Borrow(BorrowBase):

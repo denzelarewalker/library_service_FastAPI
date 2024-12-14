@@ -31,6 +31,6 @@ class Borrow(Base):
     book = relationship("Book", back_populates="borrows")
     reader_name = Column(String(100), nullable=False)
     borrow_date = Column(Date, default=datetime.date.today())
-    return_date = Column(Date, nullable=True)
+    return_date = Column(Date, default=None)
 
     

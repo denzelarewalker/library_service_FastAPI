@@ -1,5 +1,7 @@
+from datetime import date
+from typing import Optional
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, Path, Query
+from fastapi import Body, Depends, FastAPI, HTTPException, Path, Query
 from sqlalchemy.orm import Session
 from . import models, schemas, database, crud
 
@@ -107,7 +109,7 @@ def create_borrow(borrow: schemas.BorrowCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/borrows/", response_model=list[schemas.Borrow])
-def read_borrows(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def read_borrows(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     borrows = crud.get_borrows(db, skip=skip, limit=limit)
     return borrows
 
@@ -119,12 +121,20 @@ def read_borrow(borrow_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Borrow not found")
     return db_borrow
 
-@app.patch("/borrows/{borrow_id}/return", response_model=schemas.Borrow)
-def return_borrow(borrow_id: int, db: Session = Depends(get_db)):
-    db_borrow = crud.return_borrow(db, borrow_id=borrow_id)
-    if db_borrow is None:
-        raise HTTPException(status_code=404, detail="Borrow not found")
-    return db_borrow
+@app.patch("/borrows/{borrow_id}/return")
+def return_borrow(borrow_id: int, 
+                  return_date: Optional[schemas.BorrowReturn] = None,
+                  db: Session = Depends(get_db)):
+    # Если return_date не передан, устанавливаем текущую дату
+    if return_date is None:
+        return_date = date.today()
+    else:
+        return_date = return_date.return_date  # Берем дату из схемы
+    try:
+        crud.return_borrow(db, borrow_id=borrow_id, return_date = return_date)
+        return {"message": f"Borrow ID {borrow_id} returned"}
+    except Exception as err:
+        raise HTTPException(status_code=404, detail=str(err))
 
 
 
