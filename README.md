@@ -3,7 +3,14 @@
 
 
 Запустите контейнеры с помощью: `docker-compose up -d` или `docker compose up -d --build`
-
+| Метод  | Описание                                | Пример запроса                                                                                                                  |
+|--------|-----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| POST   | Добавление нового автора                | curl -X POST -H "Content-Type: application/json" -d "{\"first_name\": \"Лев\", \"last_name\": \"Толстой\", \"birth_date\": \"1828-09-09\"}" http://127.0.0.1/authors/ |
+| GET    | Получение списка всех авторов          | curl http://127.0.0.1/authors/                                                                                              |
+| GET    | Получение одного автора по ID           | curl http://127.0.0.1/authors/1                                                                                              |
+| PUT    | Изменение всех характеристик автора    | curl -X PUT -H "Content-Type: application/json" -d "{\"first_name\": \"Кристина\", \"last_name\": \"Агата\", \"birth_date\": \"1890-01-15\"}" http://127.0.0.1/authors/1 |
+| PUT    | Изменение одной характеристики автора   | curl -X PUT -H "Content-Type: application/json" -d "{\"first_name\": \"Кристи\"}" http://127.0.0.1/authors/1               |
+| DELETE | Удаление автора                         | curl -X DELETE http://127.0.0.1/authors/1                                                                                    |
 
 
 | POST запрос для авторов |
